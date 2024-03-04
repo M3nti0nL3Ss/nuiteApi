@@ -25,7 +25,4 @@ func TestSetupRouter(t *testing.T) {
 	// Check the status code
 	assert.Equal(t, http.StatusInternalServerError, w.Code)
 
-	// You can add more assertions based on the expected behavior of your GetHotels function
-	// For example, checking the response body, headers, etc.
-	// assert.Contains(t, w.Body.String(), "Expected response content")
 }
