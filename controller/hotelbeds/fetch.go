@@ -33,6 +33,7 @@ func formatHotelBedsResponse(data []byte) (interface{}, error) {
 			Price:    price,
 		})
 	}
+
 	return result, err
 }
 
@@ -55,7 +56,12 @@ func GetJson(jsonStr []byte) (int, interface{}) {
 	if err != nil {
 		panic(err)
 	}
-	defer resp.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			return
+		}
+	}(resp.Body)
 
 	body, err := io.ReadAll(resp.Body)
 	res, err := formatHotelBedsResponse(body)
