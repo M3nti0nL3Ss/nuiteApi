@@ -24,5 +24,4 @@ func TestSetupRouter(t *testing.T) {
 
 	// Check the status code
 	assert.Equal(t, http.StatusInternalServerError, w.Code)
-
 }
