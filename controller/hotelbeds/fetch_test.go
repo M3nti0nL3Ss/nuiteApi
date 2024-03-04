@@ -2,8 +2,12 @@
 package hotelbeds
 
 import (
+	"encoding/json"
 	"github.com/stretchr/testify/assert"
+	"net/http"
 	. "nuiteApi/models"
+	"strconv"
+	"strings"
 	"testing"
 )
 
@@ -51,39 +55,27 @@ func TestFormatHotelBedsResponse_ErrorDecoding(t *testing.T) {
 	assert.Nil(t, result)
 }
 
-// Add more test cases as needed to cover different scenarios
+func TestGetJson(t *testing.T) {
 
-//func TestGetJson(t *testing.T) {
-//
-//	// Create a JSON payload for testing
-//	jsonPayload := []byte(`{
-//  "stay": {
-//    "checkIn": "2024-06-15",
-//    "checkOut": "2024-06-16"
-//  },
-//  "occupancies": [
-//    {
-//      "rooms": 1,
-//      "adults": 2,
-//      "children": 0
-//    }
-//  ],
-//  "hotels": {
-//    "hotel": [
-//      77,
-//      168,
-//      264,
-//      265,
-//      297,
-//      311
-//    ]
-//  }
-//}`)
-//
-//	// Call the function to be tested
-//	statusCode, _ := GetJson(jsonPayload)
-//
-//	assert.Equal(t, http.StatusOK, statusCode)
-//	assert.Equal(t, statusCode, 200)
-//
-//}
+	// Create a JSON payload for testing
+
+	stay := &Stay{CheckIn: "2024-06-15", CheckOut: "2024-06-16"}
+	var occupancies []Occupancy
+	_ = json.Unmarshal([]byte("[\n   {\n     \"rooms\": 1,\n     \"adults\": 2,\n     \"children\": 0\n   }\n ,{\n     \"rooms\": 1,\n     \"adults\": 2,\n     \"children\": 0\n   }]"), &occupancies)
+
+	hotelIdsStr := strings.Split("[77,168,264,265,297,311]", ",")
+	hotelIds := make([]int, len(hotelIdsStr))
+	for i := range hotelIds {
+		hotelIds[i], _ = strconv.Atoi(hotelIdsStr[i])
+	}
+	hotels := Hotels{Hotel: hotelIds}
+
+	req, _ := json.Marshal(&Request{Stay: *stay, Occupancies: occupancies, Hotels: hotels})
+
+	// Call the function to be tested
+	statusCode, _ := GetJson(req)
+
+	assert.Equal(t, http.StatusOK, statusCode)
+	assert.Equal(t, statusCode, 200)
+
+}

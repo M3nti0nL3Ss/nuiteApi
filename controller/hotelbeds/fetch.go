@@ -54,14 +54,17 @@ func GetJson(jsonStr []byte) (int, interface{}) {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
+		fmt.Printf("%v\n", req)
 		panic(err)
 	}
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
-		if err != nil {
-			return
-		}
-	}(resp.Body)
+
+	defer resp.Body.Close()
+	//defer func(Body io.ReadCloser) {
+	//	err := Body.Close()
+	//	if err != nil {
+	//		panic(err)
+	//	}
+	//}(resp.Body)
 
 	body, err := io.ReadAll(resp.Body)
 	res, err := formatHotelBedsResponse(body)
