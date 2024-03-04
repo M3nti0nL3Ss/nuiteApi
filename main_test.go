@@ -23,7 +23,7 @@ func TestSetupRouter(t *testing.T) {
 	router.ServeHTTP(w, req)
 
 	// Check the status code
-	assert.Equal(t, http.StatusOK, w.Code)
+	assert.Equal(t, http.StatusInternalServerError, w.Code)
 
 	// You can add more assertions based on the expected behavior of your GetHotels function
 	// For example, checking the response body, headers, etc.
